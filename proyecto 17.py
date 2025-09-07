@@ -174,13 +174,26 @@ def registrar_evaluacion(self):
 
 
 def listar_bandas(self):
-        print("Se abrió la ventana: Listado de Bandas")
-        tk.Toplevel(self.ventana).title("Listado de Bandas")
+    ventana = tk.Toplevel(self.ventana)
+    ventana.title("Listado de Bandas")
+    texto = "\n".join(self.concurso.listar_bandas()) if self.concurso.bandas else "No hay bandas inscritas"
+    tk.Label(ventana, text=texto, justify="left").pack(pady=20)
 
     def ver_ranking(self):
-        print("Se abrió la ventana: Ranking Final")
-        tk.Toplevel(self.ventana).title("Ranking Final")
+        ventana = tk.Toplevel(self.ventana)
+        ventana.title("Ranking Final")
 
+    if not self.concurso.bandas:
+        tk.Label(ventana, text="No hay bandas inscritas").pack()
+        return
+
+        ranking = self.concurso.ranking()
+        texto = "POS | NOMBRE | INSTITUCIÓN | CATEGORÍA | TOTAL\n"
+        i = 1
+        for b in ranking:
+            i+=1
+
+        tk.Label(ventana, text=texto, justify="left").pack(pady=20)
 
 if __name__ == "__main__":
     ConcursoBandasApp()
