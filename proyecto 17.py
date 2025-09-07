@@ -88,6 +88,8 @@ class Concurso:
 
 class ConcursoBandasApp:
     def __init__(self):
+        self.concurso= Concurso("concurso de bandas-15 de septiembre", "2025-09-15")
+
         self.ventana = tk.Tk()
         self.ventana.title("Concurso de Bandas - Quetzaltenango")
         self.ventana.geometry("500x300")
@@ -116,14 +118,62 @@ class ConcursoBandasApp:
         self.ventana.config(menu=barra)
 
     def inscribir_banda(self):
-        print("Se abrió la ventana: Inscribir Banda")
-        tk.Toplevel(self.ventana).title("Inscribir Banda")
+        ventana = tk.Toplevel(self.ventana)
+        ventana.title("Inscribir Banda")
 
-    def registrar_evaluacion(self):
-        print("Se abrió la ventana: Registrar Evaluación")
-        tk.Toplevel(self.ventana).title("Registrar Evaluación")
+        tk.Label(ventana, text="Nombre:").grid(row=0, column=0)
+        tk.Label(ventana, text="Institución:").grid(row=1, column=0)
+        tk.Label(ventana, text="Categoría:").grid(row=2, column=0)
 
-    def listar_bandas(self):
+        entry_nombre = tk.Entry(ventana)
+        entry_institucion = tk.Entry(ventana)
+        entry_categoria = tk.Entry(ventana)
+
+        entry_nombre.grid(row=0, column=1)
+        entry_institucion.grid(row=1, column=1)
+        entry_categoria.grid(row=2, column=1)
+
+        def guardar():
+            banda = BandaEscolar(entry_nombre.get(), entry_institucion.get(), entry_categoria.get())
+            self.concurso.inscribir_banda(banda)
+            print("Banda inscrita:", banda.mostrar_info())
+            ventana.destroy()
+            tk.Button(ventana, text="Guardar", command=guardar).grid(row=3, column=1)
+
+def registrar_evaluacion(self):
+    ventana = tk.Toplevel(self.ventana)
+    ventana.title("Registrar Evaluación")
+
+    tk.Label(ventana, text="Nombre de Banda:").grid(row=0, column=0)
+    entry_nombre = tk.Entry(ventana)
+    entry_nombre.grid(row=0, column=1)
+
+    criterios = ["ritmo", "uniformidad", "coreografía", "alineación", "puntualidad"]
+    entries = {}
+    fila = 1
+    for c in criterios:
+        tk.Label(ventana, text=c.capitalize()).grid(row=fila, column=0)
+        entry = tk.Entry(ventana)
+        entry.grid(row=fila, column=1)
+        entries[c] = entry
+        fila += 1
+
+    def guardar():
+        puntajes = {}
+        for c in criterios:
+            valor = entries[c].get()
+            if valor.isdigit():
+                puntajes[c] = int(valor)
+            else:
+                puntajes[c] = -1
+        self.concurso.registrar_evaluacion(entry_nombre.get(), puntajes)
+        print("Evaluación registrada para:", entry_nombre.get())
+        ventana.destroy()
+
+    tk.Button(ventana, text="Guardar", command=guardar).grid(row=fila, column=1)
+
+
+def listar_bandas(self):
         print("Se abrió la ventana: Listado de Bandas")
         tk.Toplevel(self.ventana).title("Listado de Bandas")
 
